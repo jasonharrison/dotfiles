@@ -13,17 +13,22 @@ Plug 'leafgarland/typescript-vim'
 Plug 'Chiel92/vim-autoformat'
 Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
+Plug 'JamshedVesuna/vim-markdown-preview'
 
 call plug#end()
 
 " For auto Flake8 on save
 "autocmd BufWritePost *.py call Flake8()
 
+" For Python AutoPEP8 and Jedi code completion
 let g:autopep8_disable_show_diff=1
 let g:autopep8_on_save=1
 let g:PyFlakeOnWrite = 0
 let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = 0
+
+" For vim-markdown-preview
+let vim_markdown_preview_github=1 
 
 " Always show line numbers
 set number
