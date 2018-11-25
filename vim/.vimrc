@@ -14,6 +14,8 @@ Plug 'Chiel92/vim-autoformat'
 Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
 Plug 'JamshedVesuna/vim-markdown-preview'
+Plug 'heavenshell/vim-pydocstring'
+" Plug 'Valloric/YouCompleteMe'
 
 call plug#end()
 
@@ -22,10 +24,18 @@ call plug#end()
 
 " For Python AutoPEP8 and Jedi code completion
 let g:autopep8_disable_show_diff=1
-let g:autopep8_on_save=1
+let g:autopep8_on_save=0
 let g:PyFlakeOnWrite = 0
 let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = 0
+let g:jedi#use_splits_not_buffers = "left"
+let g:jedi#goto_command = "<leader>d"
+let g:jedi#goto_assignments_command = "<leader>g"
+let g:jedi#goto_definitions_command = ""
+let g:jedi#documentation_command = "K"
+let g:jedi#usages_command = "<leader>n"
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#rename_command = "<leader>r"
 
 " For vim-markdown-preview
 let vim_markdown_preview_github=1 
@@ -43,11 +53,6 @@ set ttymouse=xterm2
 " Use F5 key for Flake8
 autocmd FileType python map <buffer> <F5> :call Flake8()<CR>
 
-" For local replace
-nnoremap gr gd[{V%::s/<C-R>///gc<left><left><left>
-
-" For global replace
-nnoremap gR gD:%s/<C-R>///gc<left><left><left>
 
 function! UseTabs()
   set tabstop=4     " Size of a hard tabstop (ts).
@@ -80,6 +85,9 @@ inoremap <S-Down> <Esc>:m+<CR>
 " For gvim
 if has('gui_running')
   colorscheme industry
+else
+  colorscheme slate
+  " colorscheme elflord
 endif
 
 nnoremap yy yy"+yy
@@ -104,3 +112,6 @@ command! -nargs=0 DIFF call <SID>diff()
 
 " Always show tab names
 set showtabline=2
+
+" Leader (usually backslash) s is autoreplace
+:nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
