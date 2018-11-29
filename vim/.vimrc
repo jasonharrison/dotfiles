@@ -15,7 +15,7 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'heavenshell/vim-pydocstring'
-" Plug 'Valloric/YouCompleteMe'
+Plug 'Valloric/YouCompleteMe'
 
 call plug#end()
 
@@ -23,7 +23,7 @@ call plug#end()
 "autocmd BufWritePost *.py call Flake8()
 
 " For Python AutoPEP8 and Jedi code completion
-let g:autopep8_disable_show_diff=1
+let g:autopep8_disable_show_diff=0
 let g:autopep8_on_save=0
 let g:PyFlakeOnWrite = 0
 let g:jedi#popup_on_dot = 0
@@ -36,6 +36,9 @@ let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
 let g:jedi#completions_command = "<C-Space>"
 let g:jedi#rename_command = "<leader>r"
+
+" For YouCompleteMe
+let g:ycm_auto_trigger = 0
 
 " For vim-markdown-preview
 let vim_markdown_preview_github=1 
@@ -50,8 +53,8 @@ set noignorecase
 set mouse=a
 set ttymouse=xterm2
 
-" Use F5 key for Flake8
-autocmd FileType python map <buffer> <F5> :call Flake8()<CR>
+" Use leader (usually \) + f for Flake8
+autocmd FileType python map <buffer> <Leader>f :call Flake8()<CR>
 
 
 function! UseTabs()
@@ -77,16 +80,19 @@ call UseSpaces()
 filetype plugin on
 
 " Shift key + arrow key to move lines
-nnoremap <S-Up> :m-2<CR>
-nnoremap <S-Down> :m+<CR>
-inoremap <S-Up> <Esc>:m-2<CR>
-inoremap <S-Down> <Esc>:m+<CR>
+nnoremap <F6> :m-2<CR>
+nnoremap <F5> :m+<CR>
+inoremap <F6> <Esc>:m-2<CR>
+inoremap <F5> <Esc>:m+<CR>
 
 " For gvim
 if has('gui_running')
   colorscheme industry
 else
-  colorscheme slate
+  colorscheme default
+  " colorscheme industry
+  " colorscheme darkblue
+  " colorscheme slate
   " colorscheme elflord
 endif
 
