@@ -1,5 +1,3 @@
-execute pathogen#infect()
-call pathogen#helptags()
 call plug#begin('~/.vim/plugged')
 
 " Plugins
@@ -11,14 +9,21 @@ Plug 'Quramy/tsuquyomi'
 Plug 'jason0x43/vim-js-indent'
 Plug 'leafgarland/typescript-vim'
 Plug 'Chiel92/vim-autoformat'
+Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'heavenshell/vim-pydocstring'
 Plug 'Valloric/YouCompleteMe'
+Plug 'vim-scripts/cmdalias.vim'
+Plug 'tpope/vim-pathogen'
 
 call plug#end()
 
+execute pathogen#infect()
+call pathogen#helptags()
+let g:python3_host_prog='/usr/bin/python3'
+let g:python_host_prog='/usr/bin/python2'
 " For auto Flake8 on save
 "autocmd BufWritePost *.py call Flake8()
 
@@ -51,7 +56,6 @@ set noignorecase
 
 " Mouse input
 set mouse=a
-set ttymouse=xterm2
 
 " Use leader (usually \) + f for Flake8
 autocmd FileType python map <buffer> <Leader>f :call Flake8()<CR>
@@ -75,6 +79,7 @@ endfunction
 
 " UseSpaces() by default
 call UseSpaces()
+call UseTabs()
 
 " For file type detection
 filetype plugin on
@@ -84,17 +89,12 @@ nnoremap <F6> :m-2<CR>
 nnoremap <F5> :m+<CR>
 inoremap <F6> <Esc>:m-2<CR>
 inoremap <F5> <Esc>:m+<CR>
+nnoremap <esc><esc> :silent! nohls<cr>
 
-" For gvim
-if has('gui_running')
-  colorscheme industry
-else
-  colorscheme default
-  " colorscheme industry
-  " colorscheme darkblue
-  " colorscheme slate
-  " colorscheme elflord
-endif
+autocmd VimEnter * colorscheme industry 
+" colorscheme darkblue
+" colorscheme slate
+" colorscheme elflord
 
 nnoremap yy yy"+yy
 vnoremap y ygv"+y
@@ -121,3 +121,6 @@ set showtabline=2
 
 " Leader (usually backslash) s is autoreplace
 :nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
+
+" Alias :tabclose to :tac
+autocmd VimEnter * Alias tac tabclose
