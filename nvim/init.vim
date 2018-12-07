@@ -17,6 +17,7 @@ Plug 'heavenshell/vim-pydocstring'
 Plug 'Valloric/YouCompleteMe'
 Plug 'vim-scripts/cmdalias.vim'
 Plug 'tpope/vim-pathogen'
+Plug 'Glench/Vim-Jinja2-Syntax'
 
 call plug#end()
 
@@ -124,3 +125,6 @@ set showtabline=2
 
 " Alias :tabclose to :tac
 autocmd VimEnter * Alias tac tabclose
+
+" Use spaces for HTML files
+autocmd BufRead *.html :call UseSpaces()
