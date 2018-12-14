@@ -5,7 +5,6 @@ Plug 'sheerun/vim-polyglot'
 Plug 'davidhalter/jedi-vim'
 Plug 'nvie/vim-flake8'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'Quramy/tsuquyomi'
 Plug 'jason0x43/vim-js-indent'
 Plug 'leafgarland/typescript-vim'
 Plug 'Chiel92/vim-autoformat'
@@ -19,6 +18,9 @@ Plug 'vim-scripts/cmdalias.vim'
 Plug 'tpope/vim-pathogen'
 Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'alvan/vim-closetag'
+Plug 'Quramy/tsuquyomi'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'cazador481/fakeclip.neovim'
 
 call plug#end()
 
@@ -43,6 +45,9 @@ let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
 let g:jedi#completions_command = "<C-Space>"
 let g:jedi#rename_command = "<leader>r"
+
+" For fakeclip
+let g:vim_fakeclip_tmux_plus=1 
 
 " For YouCompleteMe
 let g:ycm_auto_trigger = 0
@@ -115,10 +120,11 @@ endfunction
 
 " UseSpaces() by default
 call UseSpaces()
-call UseTabs()
+" call UseTabs()
 
 " For file type detection
 filetype plugin on
+filetype plugin indent on
 
 " Shift key + arrow key to move lines
 nnoremap <F6> :m-2<CR>
