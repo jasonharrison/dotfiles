@@ -1,0 +1,43 @@
+[core]
+	excludesfile = /Users/jason/.gitignore_global
+	editor = nvim
+[user]
+	name = Jason
+	email = me@jasonharrison.us
+	signingkey = A2B93D45
+[push]
+	default = simple
+[gc]
+	autoDetach = false
+[color]
+    branch = auto
+    diff = auto
+    status = auto
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+[commit]
+	gpgsign = true
+[gpg]
+	program = gpg
+[alias]
+	apply-gitignore = !git ls-files -ci --exclude-standard -z | xargs -0 git rm --cached
+	uncommit = reset HEAD^
+	co = checkout
+[mergetool "vimdiff"]
+    # cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+	  cmd = nvim -d $LOCAL $REMOTE -c '$wincmd w' -c 'wincmd L'
+[diff]
+	tool = vimdiff
+[merge]
+	tool = vimdiff
