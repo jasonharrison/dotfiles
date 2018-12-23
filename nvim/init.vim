@@ -21,6 +21,8 @@ Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'Quramy/tsuquyomi'
 Plug 'peitalin/vim-jsx-typescript'
 Plug 'cazador481/fakeclip.neovim'
+Plug 'w0rp/ale'
+Plug 'vim-airline/vim-airline'
 
 call plug#end()
 
@@ -28,8 +30,20 @@ execute pathogen#infect()
 call pathogen#helptags()
 let g:python3_host_prog='/usr/bin/python3'
 let g:python_host_prog='/usr/bin/python2'
-" For auto Flake8 on save
-"autocmd BufWritePost *.py call Flake8()
+
+" For ale linting
+let g:ale_linters = {
+\   'python': ['vulture', 'yapf', 'flake8'],
+\}
+
+" Ale linting with airline
+let g:airline#extensions#ale#enabled = 1
+
+" Only run linters named in ale_linters settings.
+let g:ale_linters_explicit = 1
+
+" Run yapf on <leader>y
+autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr><C-o>
 
 " For Python AutoPEP8 and Jedi code completion
 let g:autopep8_disable_show_diff=0
