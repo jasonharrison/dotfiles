@@ -17,7 +17,7 @@ Plug 'Valloric/YouCompleteMe'
 Plug 'vim-scripts/cmdalias.vim'
 Plug 'tpope/vim-pathogen'
 Plug 'Glench/Vim-Jinja2-Syntax'
-Plug 'alvan/vim-closetag'
+" Plug 'alvan/vim-closetag'
 Plug 'Quramy/tsuquyomi'
 Plug 'peitalin/vim-jsx-typescript'
 Plug 'cazador481/fakeclip.neovim'
@@ -35,8 +35,8 @@ let g:python_host_prog='/usr/bin/python2'
 let g:autopep8_disable_show_diff=0
 let g:autopep8_on_save=0
 let g:PyFlakeOnWrite = 0
-let g:jedi#popup_on_dot = 0
-let g:jedi#show_call_signatures = 0
+let g:jedi#popup_on_dot = 1
+let g:jedi#show_call_signatures = 1
 let g:jedi#use_splits_not_buffers = "left"
 let g:jedi#goto_command = "<leader>d"
 let g:jedi#goto_assignments_command = "<leader>g"
@@ -50,7 +50,10 @@ let g:jedi#rename_command = "<leader>r"
 let g:vim_fakeclip_tmux_plus=1 
 
 " For YouCompleteMe
-let g:ycm_auto_trigger = 0
+let g:ycm_auto_trigger = 1
+let g:ycm_filetype_specific_completion_to_disable = {
+      \ 'python': 1
+      \}
 
 " For vim-markdown-preview
 let vim_markdown_preview_github=1 
@@ -133,6 +136,19 @@ inoremap <F6> <Esc>:m-2<CR>
 inoremap <F5> <Esc>:m+<CR>
 nnoremap <esc><esc> :silent! nohls<cr>
 
+" Go to tab by number
+noremap <leader>1 1gt
+noremap <leader>2 2gt
+noremap <leader>3 3gt
+noremap <leader>4 4gt
+noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
+noremap <leader>0 :tablast<cr>
+
+" Use industry theme
 autocmd VimEnter * colorscheme industry 
 " colorscheme darkblue
 " colorscheme slate
