@@ -20,9 +20,13 @@ Plug 'Glench/Vim-Jinja2-Syntax'
 " Plug 'alvan/vim-closetag'
 Plug 'Quramy/tsuquyomi'
 Plug 'peitalin/vim-jsx-typescript'
-Plug 'cazador481/fakeclip.neovim'
 Plug 'w0rp/ale'
 Plug 'vim-airline/vim-airline'
+Plug 'RRethy/vim-illuminate'
+Plug 'luochen1990/rainbow'
+Plug 'terryma/vim-smooth-scroll'
+Plug 'inside/vim-search-pulse'
+Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 
 call plug#end()
 
@@ -30,6 +34,18 @@ execute pathogen#infect()
 call pathogen#helptags()
 let g:python3_host_prog='/usr/bin/python3'
 let g:python_host_prog='/usr/bin/python2'
+
+" For vim-smooth-scroll
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+
+" Enable rainbow at startup
+let g:rainbow_active = 1
+
+" More contrast
+hi link illuminatedWord Visual
 
 " For ale linting
 let g:ale_linters = {
@@ -59,9 +75,6 @@ let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
 let g:jedi#completions_command = "<C-Space>"
 let g:jedi#rename_command = "<leader>r"
-
-" For fakeclip
-let g:vim_fakeclip_tmux_plus=1 
 
 " For YouCompleteMe
 let g:ycm_auto_trigger = 1
@@ -143,11 +156,11 @@ call UseSpaces()
 filetype plugin on
 filetype plugin indent on
 
-" Shift key + arrow key to move lines
-nnoremap <F6> :m-2<CR>
-nnoremap <F5> :m+<CR>
-inoremap <F6> <Esc>:m-2<CR>
-inoremap <F5> <Esc>:m+<CR>
+" Leader + up/down key moves lines
+nnoremap <leader><Up>   :<C-u>silent! move-2<CR>==
+nnoremap <leader><Down> :<C-u>silent! move+<CR>==
+xnoremap <leader><Up>   :<C-u>silent! '<,'>move-2<CR>gv=gv
+xnoremap <leader><Down> :<C-u>silent! '<,'>move'>+<CR>gv=gv
 nnoremap <esc><esc> :silent! nohls<cr>
 
 " Go to tab by number
