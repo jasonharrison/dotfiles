@@ -1,45 +1,35 @@
-call plug#begin('~/.vim/plugged')
-
+call plug#begin('~/.local/share/nvim/plugged')
 " Plugins
-Plug 'sheerun/vim-polyglot'
-Plug 'davidhalter/jedi-vim'
+Plug 'ervandew/supertab'
 Plug 'nvie/vim-flake8'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'jason0x43/vim-js-indent'
-Plug 'leafgarland/typescript-vim'
 Plug 'Chiel92/vim-autoformat'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'heavenshell/vim-pydocstring'
-Plug 'Valloric/YouCompleteMe'
+" Plug 'Valloric/YouCompleteMe'
 Plug 'vim-scripts/cmdalias.vim'
-Plug 'tpope/vim-pathogen'
-Plug 'Glench/Vim-Jinja2-Syntax'
 " Plug 'alvan/vim-closetag'
 Plug 'Quramy/tsuquyomi'
+Plug 'leafgarland/typescript-vim'
 Plug 'peitalin/vim-jsx-typescript'
 Plug 'w0rp/ale'
 Plug 'vim-airline/vim-airline'
 Plug 'RRethy/vim-illuminate'
 Plug 'luochen1990/rainbow'
-Plug 'terryma/vim-smooth-scroll'
 Plug 'inside/vim-search-pulse'
 Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
-
+Plug 'davidhalter/jedi-vim', {'for': 'python'}
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 call plug#end()
 
-execute pathogen#infect()
-call pathogen#helptags()
+
+let g:vim_markdown_folding_disabled = 1
 let g:python3_host_prog='/usr/bin/python3'
 let g:python_host_prog='/usr/bin/python2'
-
-" For vim-smooth-scroll
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
 
 " Enable rainbow at startup
 let g:rainbow_active = 1
@@ -59,65 +49,51 @@ let g:airline#extensions#ale#enabled = 1
 let g:ale_linters_explicit = 1
 
 " Run yapf on <leader>y
-autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr><C-o>
+noremap <leader>y :Autoformat<CR>
+" autocmd FileType python nnoremap <leader>y :1>,$!yapf<Cr><C-o>
+
+" TsuDefinition TsuRenameSymbol TsuReferences
+
+autocmd FileType typescript nmap <buffer> <Leader>r <Plug>(TsuquyomiRenameSymbol)
+autocmd FileType typescript nmap <buffer> <Leader>R <Plug>(TsuquyomiRenameSymbolC)
+autocmd FileType typescript nmap <silent> <leader>g <Plug>(TsuquyomiDefinition)
+autocmd FileType typescript nmap <silent> <leader>n <Plug>(TsuquyomiReferences)
+
+autocmd FileType python let g:jedi#completions_command = "<c-x><c-o>"
+autocmd FileType python let g:jedi#completions_enabled = 1
+" let g:jedi#rename_command = "<leader>r"
+autocmd FileType python nmap <silent> <leader>rr :Semshi rename<CR>
+" Using <C-Space> for omnicompletion
+autocmd FileType python inoremap <silent> <buffer> <C-Space> <c-x><c-o>
 
 " For Python AutoPEP8 and Jedi code completion
 let g:autopep8_disable_show_diff=0
 let g:autopep8_on_save=0
 let g:PyFlakeOnWrite = 0
-let g:jedi#popup_on_dot = 1
-let g:jedi#show_call_signatures = 1
+let g:jedi#popup_on_dot = 0
+let g:jedi#show_call_signatures = "2"
 let g:jedi#use_splits_not_buffers = "left"
+" let g:jedi#use_tabs_not_buffers = 1
 let g:jedi#goto_command = "<leader>d"
 let g:jedi#goto_assignments_command = "<leader>g"
 let g:jedi#goto_definitions_command = ""
 let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
-let g:jedi#completions_command = "<C-Space>"
-let g:jedi#rename_command = "<leader>r"
+
+let g:tsuquyomi_completion_detail = 1
+
+" For ALE
+nmap <silent> <leader>aj :ALENext<cr>
+nmap <silent> <leader>ak :ALEPrevious<cr>
 
 " For YouCompleteMe
-let g:ycm_auto_trigger = 1
+let g:ycm_auto_trigger = 0
 let g:ycm_filetype_specific_completion_to_disable = {
       \ 'python': 1
       \}
 
 " For vim-markdown-preview
 let vim_markdown_preview_github=1 
-
-" For vim-closetag
-" filenames like *.xml, *.html, *.xhtml, ...
-" These are the file extensions where this plugin is enabled.
-"
-let g:closetag_filenames = '*.html,*.xhtml,*.phtml'
-
-" filenames like *.xml, *.xhtml, ...
-" This will make the list of non-closing tags self-closing in the specified files.
-"
-let g:closetag_xhtml_filenames = '*.xhtml,*.jsx'
-
-" filetypes like xml, html, xhtml, ...
-" These are the file types where this plugin is enabled.
-"
-let g:closetag_filetypes = 'html,xhtml,phtml'
-
-" filetypes like xml, xhtml, ...
-" This will make the list of non-closing tags self-closing in the specified files.
-"
-let g:closetag_xhtml_filetypes = 'xhtml,jsx'
-
-" integer value [0|1]
-" This will make the list of non-closing tags case-sensitive (e.g. `<Link>` will be closed while `<link>` won't.)
-"
-let g:closetag_emptyTags_caseSensitive = 1
-
-" Shortcut for closing tags, default is '>'
-"
-let g:closetag_shortcut = '>'
-
-" Add > at current position without closing the current tag, default is ''
-"
-let g:closetag_close_shortcut = '<leader>>'
 
 " Always show line numbers
 set number
@@ -130,6 +106,7 @@ set mouse=a
 
 " Use leader (usually \) + f for Flake8
 autocmd FileType python map <buffer> <Leader>f :call Flake8()<CR>
+autocmd FileType pyhon set omnifunc=jedi#completions
 
 
 function! UseTabs()
@@ -148,13 +125,6 @@ function! UseSpaces()
   set smarttab      " Inserts blanks on a <Tab> key (as per sw, ts and sts).
 endfunction
 
-" UseSpaces() by default
-call UseSpaces()
-" call UseTabs()
-
-" For file type detection
-filetype plugin on
-filetype plugin indent on
 
 " Leader + up/down key moves lines
 nnoremap <leader><Up>   :<C-u>silent! move-2<CR>==
@@ -212,3 +182,15 @@ autocmd VimEnter * Alias tac tabclose
 
 " Use spaces for HTML files
 autocmd BufRead *.html :call UseSpaces()
+
+" Reload semshi because it seems to only work for me after a restart...
+autocmd VimEnter *.py :call plug#end()
+
+
+" UseSpaces() by default
+call UseSpaces()
+" call UseTabs()
+
+" For file type detection
+filetype plugin on
+filetype plugin indent on
