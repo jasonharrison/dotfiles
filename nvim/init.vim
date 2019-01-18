@@ -1,20 +1,21 @@
 call plug#begin('~/.local/share/nvim/plugged')
-" Plugins
 Plug 'ervandew/supertab'
 Plug 'nvie/vim-flake8'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+Plug 'jason0x43/vim-js-indent'
 Plug 'Chiel92/vim-autoformat'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'heavenshell/vim-pydocstring'
-" Plug 'Valloric/YouCompleteMe'
 Plug 'vim-scripts/cmdalias.vim'
-" Plug 'alvan/vim-closetag'
 Plug 'Quramy/tsuquyomi'
 Plug 'leafgarland/typescript-vim'
-Plug 'peitalin/vim-jsx-typescript'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'pangloss/vim-javascript'
+Plug 'jason0x43/vim-js-indent'
+Plug 'Quramy/vim-js-pretty-template'
 Plug 'w0rp/ale'
 Plug 'vim-airline/vim-airline'
 Plug 'RRethy/vim-illuminate'
@@ -24,7 +25,17 @@ Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 Plug 'davidhalter/jedi-vim', {'for': 'python'}
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
+Plug 'tpope/vim-fugitive'
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
 call plug#end()
+
+let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 
 
 let g:vim_markdown_folding_disabled = 1
@@ -40,7 +51,12 @@ hi link illuminatedWord Visual
 " For ale linting
 let g:ale_linters = {
 \   'python': ['vulture', 'yapf', 'flake8'],
+\   'typescript': ['tsserver'],
 \}
+
+let g:ale_lint_on_text_changed = 0
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_save = 1
 
 " Ale linting with airline
 let g:airline#extensions#ale#enabled = 1
@@ -50,18 +66,14 @@ let g:ale_linters_explicit = 1
 
 " Run yapf on <leader>y
 noremap <leader>y :Autoformat<CR>
-" autocmd FileType python nnoremap <leader>y :1>,$!yapf<Cr><C-o>
 
-" TsuDefinition TsuRenameSymbol TsuReferences
-
+let g:vim_jsx_pretty_colorful_config = 1 
 autocmd FileType typescript nmap <buffer> <Leader>r <Plug>(TsuquyomiRenameSymbol)
 autocmd FileType typescript nmap <buffer> <Leader>R <Plug>(TsuquyomiRenameSymbolC)
 autocmd FileType typescript nmap <silent> <leader>g <Plug>(TsuquyomiDefinition)
 autocmd FileType typescript nmap <silent> <leader>n <Plug>(TsuquyomiReferences)
-
-autocmd FileType python let g:jedi#completions_command = "<c-x><c-o>"
-autocmd FileType python let g:jedi#completions_enabled = 1
-" let g:jedi#rename_command = "<leader>r"
+autocmd FileType typescript nmap <silent> <leader>q <Plug>(TsuquyomiQuickFix)
+let g:jedi#rename_command = "<leader>r"
 autocmd FileType python nmap <silent> <leader>rr :Semshi rename<CR>
 " Using <C-Space> for omnicompletion
 autocmd FileType python inoremap <silent> <buffer> <C-Space> <c-x><c-o>
@@ -70,10 +82,10 @@ autocmd FileType python inoremap <silent> <buffer> <C-Space> <c-x><c-o>
 let g:autopep8_disable_show_diff=0
 let g:autopep8_on_save=0
 let g:PyFlakeOnWrite = 0
-let g:jedi#popup_on_dot = 0
+"let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = "2"
 let g:jedi#use_splits_not_buffers = "left"
-" let g:jedi#use_tabs_not_buffers = 1
+let g:jedi#use_tabs_not_buffers = 1
 let g:jedi#goto_command = "<leader>d"
 let g:jedi#goto_assignments_command = "<leader>g"
 let g:jedi#goto_definitions_command = ""
@@ -81,16 +93,14 @@ let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
 
 let g:tsuquyomi_completion_detail = 1
+let g:tsuquyomi_disable_quickfix = 1
+autocmd FileType typescript setlocal completeopt+=menu,preview
+autocmd FileType python setlocal completeopt+=menuone,noinsert,noselect
+
 
 " For ALE
 nmap <silent> <leader>aj :ALENext<cr>
 nmap <silent> <leader>ak :ALEPrevious<cr>
-
-" For YouCompleteMe
-let g:ycm_auto_trigger = 0
-let g:ycm_filetype_specific_completion_to_disable = {
-      \ 'python': 1
-      \}
 
 " For vim-markdown-preview
 let vim_markdown_preview_github=1 
@@ -106,7 +116,7 @@ set mouse=a
 
 " Use leader (usually \) + f for Flake8
 autocmd FileType python map <buffer> <Leader>f :call Flake8()<CR>
-autocmd FileType pyhon set omnifunc=jedi#completions
+autocmd FileType python set omnifunc=jedi#completions
 
 
 function! UseTabs()
@@ -194,3 +204,25 @@ call UseSpaces()
 " For file type detection
 filetype plugin on
 filetype plugin indent on
+syntax enable
+let g:neocomplete#enable_at_startup = 1
+
+" autocmd FileType python setlocal omnifunc=jedi#completions
+let g:jedi#completions_enabled = 1
+let g:jedi#auto_vim_configuration = 1
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins', 'for': 'typescript' }
+else
+  Plug 'Shougo/deoplete.nvim', { 'for': 'typescript' }
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+
+" Load NERDTree if there was no file specified on the command line
+function! StartUp()
+    if 0 == argc()
+        NERDTree
+    end
+endfunction
+
+autocmd VimEnter * call StartUp()
