@@ -3,7 +3,7 @@ Plug 'ervandew/supertab'
 Plug 'nvie/vim-flake8'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'jason0x43/vim-js-indent'
-Plug 'Chiel92/vim-autoformat'
+Plug 'bennyyip/vim-yapf'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
@@ -26,14 +26,22 @@ Plug 'davidhalter/jedi-vim', {'for': 'python'}
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-fugitive'
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+Plug 'Xuyuanp/nerdtree-git-plugin'
+"if has('nvim')
+  "Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"else
+  "Plug 'Shougo/deoplete.nvim'
+  "Plug 'roxma/nvim-yarp'
+  "Plug 'roxma/vim-hug-neovim-rpc'
+"endif
 call plug#end()
+
+filetype on
+filetype plugin on
+filetype plugin indent on
+set nocompatible
+syntax on
+set shell=sh
 
 let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 
@@ -65,7 +73,9 @@ let g:airline#extensions#ale#enabled = 1
 let g:ale_linters_explicit = 1
 
 " Run yapf on <leader>y
-noremap <leader>y :Autoformat<CR>
+let g:yapf#code_style = 'google'
+autocmd FileType python nnoremap <buffer><Leader>y :<C-u>Yapf<CR>
+autocmd FileType python vnoremap <buffer><Leader>y :Yapf<CR>
 
 let g:vim_jsx_pretty_colorful_config = 1 
 autocmd FileType typescript nmap <buffer> <Leader>r <Plug>(TsuquyomiRenameSymbol)
@@ -78,11 +88,8 @@ autocmd FileType python nmap <silent> <leader>rr :Semshi rename<CR>
 " Using <C-Space> for omnicompletion
 autocmd FileType python inoremap <silent> <buffer> <C-Space> <c-x><c-o>
 
-" For Python AutoPEP8 and Jedi code completion
-let g:autopep8_disable_show_diff=0
-let g:autopep8_on_save=0
 let g:PyFlakeOnWrite = 0
-"let g:jedi#popup_on_dot = 0
+let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = "2"
 let g:jedi#use_splits_not_buffers = "left"
 let g:jedi#use_tabs_not_buffers = 1
@@ -95,7 +102,8 @@ let g:jedi#usages_command = "<leader>n"
 let g:tsuquyomi_completion_detail = 1
 let g:tsuquyomi_disable_quickfix = 1
 autocmd FileType typescript setlocal completeopt+=menu,preview
-autocmd FileType python setlocal completeopt+=menuone,noinsert,noselect
+autocmd FileType python setlocal completeopt+=menu,preview
+" autocmd FileType python setlocal completeopt+=menuone,noinsert,noselect
 
 
 " For ALE
@@ -187,14 +195,17 @@ set showtabline=2
 " Leader (usually backslash) s is autoreplace
 :nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
-" Alias :tabclose to :tac
+" Aliases:
 autocmd VimEnter * Alias tac tabclose
+autocmd FileType python nmap <buffer> <Leader>q  :call plug#end()
+autocmd VimEnter * Alias te tabedit
 
 " Use spaces for HTML files
 autocmd BufRead *.html :call UseSpaces()
 
 " Reload semshi because it seems to only work for me after a restart...
-autocmd VimEnter *.py :call plug#end()
+autocmd VimEnter *.py exe "filetype" "detect" | :call plug#end()
+autocmd BufRead *.py exe "filetype" "detect" | :call plug#end()
 
 
 " UseSpaces() by default
@@ -202,27 +213,46 @@ call UseSpaces()
 " call UseTabs()
 
 " For file type detection
-filetype plugin on
-filetype plugin indent on
-syntax enable
 let g:neocomplete#enable_at_startup = 1
 
 " autocmd FileType python setlocal omnifunc=jedi#completions
 let g:jedi#completions_enabled = 1
 let g:jedi#auto_vim_configuration = 1
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins', 'for': 'typescript' }
-else
-  Plug 'Shougo/deoplete.nvim', { 'for': 'typescript' }
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
 
 " Load NERDTree if there was no file specified on the command line
-function! StartUp()
-    if 0 == argc()
-        NERDTree
-    end
-endfunction
+"function! StartUp()
+    "if 0 == argc()
+        "NERDTree
+    "end
+"endfunction
 
-autocmd VimEnter * call StartUp()
+"autocmd VimEnter * call StartUp()
+
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+map <Leader>t :NERDTreeToggle<CR>
+let NERDTreeQuitOnOpen = 1
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
+
+function! SplitOther()
+    let s:pairs = [ [ "h", "cpp" ], [ "vert", "frag" ] ]
+    let s:fname = expand("%:p:r")
+
+    for [s:left, s:right] in s:pairs
+        if expand("%:e") == s:left
+            set splitright
+            exe "vsplit" fnameescape(s:fname . "." . s:right) 
+            break
+        elseif expand("%:e") == s:right
+            set nosplitright
+            exe "vsplit" fnameescape(s:fname . "." . s:left)
+            break
+        endif
+    endfor
+
+    exe "filetype" "detect"
+endfunction 
+
+autocmd! BufRead * call SplitOther()
